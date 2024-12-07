@@ -63,9 +63,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview-android:1.7.5")
     implementation("androidx.compose.foundation:foundation-layout-android:1.7.5")
     implementation("androidx.compose.ui:ui-android:1.7.5")
+    implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0")
-    /*implementation("androidx.compose.material3:material3-android:1.3.1")*/
+    implementation("androidx.navigation:navigation-compose:2.7.0")
     implementation("androidx.benchmark:benchmark-macro:1.3.3")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.8.4")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -73,4 +75,5 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
 }

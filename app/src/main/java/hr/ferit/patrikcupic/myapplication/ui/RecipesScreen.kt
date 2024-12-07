@@ -7,6 +7,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -23,12 +23,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import hr.ferit.patrikcupic.labs.lab1.Recipe
 import hr.ferit.patrikcupic.myapplication.R
 import androidx.compose.foundation.layout.Row as Row
 
-@Preview(showBackground = true)
 @Composable
-fun RecipesScreen() {
+fun RecipesScreen(
+    navigation: NavController
+) {
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -165,29 +168,44 @@ fun RecipeCategories() {
 fun IconButton(
     @DrawableRes iconResource: Int,
     text: String,
-    colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = Pink)
+    colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = Pink),
+    side: Int = 0
 ) {
-    Button (
-        onClick = { },
+    Button(
+        onClick = { /*TODO*/ },
         colors = colors,
     ) {
         Row {
-            Icon(
-                painter = painterResource(id = iconResource),
-                contentDescription = text
-            )
-            Spacer(Modifier.width(2.dp))
-            Text(
-                text = text,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Light
+            if (side == 0) {
+                Icon(
+                    painter = painterResource(id = iconResource),
+                    contentDescription = text
                 )
-            )
+                Spacer(Modifier.width(2.dp))
+                Text(
+                    text = text,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Light
+                    )
+                )
+            } else {
+                Text(
+                    text = text,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Light
+                    )
+                )
+                Spacer(Modifier.width(2.dp))
+                Icon(
+                    painter = painterResource(id = iconResource),
+                    contentDescription = text
+                )
+            }
         }
     }
 }
-
 
 @Composable fun Chip(
     text: String,
