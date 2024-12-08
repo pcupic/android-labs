@@ -194,6 +194,14 @@ fun TopImageAndBar(
     }
 }
 
+/*
+* CircularButton(
+                    iconResource = R.drawable.ic_arrow_back,
+                    color = Pink,
+                    onClick = { navigation.navigateUp() }
+                )
+                * */
+
 @Composable
 fun ScreenInfo(
     title: String,

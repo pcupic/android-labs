@@ -24,7 +24,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import hr.ferit.patrikcupic.labs.lab1.Recipe
+import hr.ferit.patrikcupic.labs.lab1.recipes
 import hr.ferit.patrikcupic.myapplication.R
 import androidx.compose.foundation.layout.Row as Row
 
@@ -32,6 +35,7 @@ import androidx.compose.foundation.layout.Row as Row
 fun RecipesScreen(
     navigation: NavController
 ) {
+    val recipes = recipes
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,10 +50,64 @@ fun RecipesScreen(
             labelText = "Search something"
         )
         RecipeCategories()
-        RecipeCard(imageResource = R.drawable.strawberry_pie_2, title = "Strawberry pie")
+        RecipeList(
+            recipes = recipes,
+            navigation = navigation
+        )
         IconButton(iconResource = R.drawable.ic_plus, text = "Add new recipe")
     }
 }
+
+
+@Composable
+fun RecipeList(
+    recipes: List<Recipe>,
+    navigation: NavController
+) {
+    Column {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+        ) {
+            Text(
+                text = "7 recipes",
+                style = TextStyle(
+                    color = Color.DarkGray,
+                    fontSize = 14.sp
+                )
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.ic_flame),
+                contentDescription = "Flame",
+                tint = Color.DarkGray,
+                modifier = Modifier
+                    .width(18.dp)
+                    .height(18.dp)
+            )
+        }
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            items(recipes.size) { index ->
+                // Pass the correct parameters to RecipeCard
+                RecipeCard(
+                    id = index, // Pass the id here
+                    imageResource = recipes[index].image, // Pass the image
+                    title = recipes[index].title, // Pass the title
+                    navigation = navigation // Pass navigation
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+        }
+    }
+}
+
+
 
 @Composable
 fun ScreenTitle(title: String, subtitle: String) {
@@ -231,43 +289,54 @@ fun IconButton(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeCard(
+    id: Int,
     @DrawableRes imageResource: Int,
-    title: String
+    title: String,
+    navigation: NavController
 ) {
-    Box(
+    Card(
         modifier = Modifier
-            .width(215.dp)
             .height(326.dp)
-            .fillMaxWidth()
-    ) {
-        Image(
-            painter = painterResource(imageResource),
-            contentDescription = title,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .clip(RoundedCornerShape(26.dp))
-                .fillMaxSize()
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 10.dp, vertical = 20.dp),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            Text(
-                text = title,
-                style = TextStyle (
-                    color = White,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            .width(215.dp)
+            .clip(RoundedCornerShape(12.dp)),
+        onClick = {
+            navigation.navigate(
+                route = Routes.getRecipeDetailsPath(id)
             )
-            Row {
-                Chip(text = "30 min", backgroundColor = White, textColor = Pink)
-                Spacer(modifier = Modifier.width(4.dp))
-                Chip(text = "4 Ingredients", backgroundColor = White, textColor = Pink)
+        }
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // Use painterResource for local images
+            Image(
+                painter = painterResource(id = imageResource), // Using painterResource for local images
+                contentDescription = title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp, vertical = 20.dp),
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                Text(
+                    text = title,
+                    style = TextStyle(
+                        color = White,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+                Row {
+                    Chip(text = "30 min", backgroundColor = White, textColor = Pink)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Chip(text = "4 ingredients", backgroundColor = White, textColor = Pink)
+                }
             }
         }
     }
