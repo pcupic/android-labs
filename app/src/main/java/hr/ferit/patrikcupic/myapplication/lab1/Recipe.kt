@@ -7,12 +7,13 @@ data class Recipe(
     @DrawableRes val image: Int,
     val title: String,
     val category: String,
-    val cookingTime: String, // u minutama
-    val energy: String, // u kalorijama
+    val cookingTime: String,
+    val energy: String,
     val rating: String,
     val description: String,
     val reviews: String,
-    val ingredients: List<Ingredient>
+    val ingredients: List<Ingredient>,
+    var isFavorite: Boolean = false
 )
 
 val recipes: List<Recipe> = listOf(

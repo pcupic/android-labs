@@ -42,7 +42,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Magenta
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -72,7 +74,8 @@ fun RecipeDetailsScreen(
         item {
             TopImageAndBar(
                 coverImage = recipe.image,
-                navigation = navigation
+                navigation = navigation,
+                recipe = recipes[recipeId]
             )
             ScreenInfo(recipe.title, recipe.category)
             BasicInfo(recipe)
@@ -148,7 +151,8 @@ fun CircularButton(
 @Composable
 fun TopImageAndBar(
     navigation: NavController,
-    @DrawableRes coverImage: Int
+    @DrawableRes coverImage: Int,
+    recipe: Recipe
 ) {
     Box(
         modifier = Modifier
@@ -174,8 +178,17 @@ fun TopImageAndBar(
                     .height(56.dp)
                     .padding(horizontal = 16.dp)
             ) {
-                CircularButton(R.drawable.ic_arrow_back)
-                CircularButton(R.drawable.ic_favorite)
+                CircularButton(
+                    iconResource = R.drawable.ic_arrow_back,
+                    color = Pink,
+                    onClick = { navigation.navigateUp() }
+                )
+                CircularButton(
+                    R.drawable.ic_favorite,
+                    color = if(recipe.isFavorite) Magenta else DarkGray
+                ) {
+                    recipe.isFavorite = !recipe.isFavorite
+                }
             }
             Box(
                 modifier = Modifier
@@ -193,14 +206,6 @@ fun TopImageAndBar(
         }
     }
 }
-
-/*
-* CircularButton(
-                    iconResource = R.drawable.ic_arrow_back,
-                    color = Pink,
-                    onClick = { navigation.navigateUp() }
-                )
-                * */
 
 @Composable
 fun ScreenInfo(
