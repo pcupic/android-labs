@@ -14,26 +14,4 @@
 .cxx
 local.properties
 
-# Ignorišemo direktorijum za IDE
-.idea/
-*.iml
-
-# Ignorišemo Gradle wrapper fajlove
-/gradle/wrapper/
-gradle.properties
-
-# Ignorišemo build fajlove
-build/
-*.log
-
-# Ignorišemo Gradle wrapper skripte (Unix/Linux)
-gradlew
-gradlew.bat
-
-# Ignorišemo lokalne konfiguracione fajlove
-*.env
-
-# Ignorišemo sistemske fajlove
-.DS_Store
-Thumbs.db
 
