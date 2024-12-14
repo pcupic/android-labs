@@ -13,3 +13,27 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Ignore IDE-specific files
+/.idea/                # IntelliJ IDEA or Android Studio project files
+*.iml                  # IntelliJ IDEA module files
+
+# Ignore Gradle wrapper files (you can commit gradle wrapper scripts, but generally exclude others)
+/gradle/wrapper/        # Gradle wrapper files
+gradle.properties       # Gradle configuration (can be shared but might contain sensitive info)
+
+# Ignore build files (generated during the build process)
+build/                  # Build output directory (compiled files, intermediate files)
+*.log                   # Log files
+
+# Ignore Gradle wrapper files (Unix/Linux systems)
+gradlew                 # Gradle wrapper script (Unix/Linux)
+gradlew.bat             # Gradle wrapper script (Windows)
+
+# Ignore local configuration files
+*.env                   # Environment variables files (if you use them for sensitive data)
+
+# Ignore other system files
+.DS_Store               # macOS specific file
+Thumbs.db               # Windows specific file
+
