@@ -1,4 +1,4 @@
-package hr.ferit.patrikcupic.labs.lab1
+package hr.ferit.patrikcupic.myapplication.data
 
 class Robot(private var x: Int = 0, private var y: Int = 0) {
 

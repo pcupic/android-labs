@@ -1,11 +1,13 @@
 package hr.ferit.patrikcupic.myapplication.ui
 
+import LightGray
 import Pink
 import Purple500
 import White
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,22 +22,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
-import hr.ferit.patrikcupic.labs.lab1.Recipe
-import hr.ferit.patrikcupic.labs.lab1.recipes
+import hr.ferit.patrikcupic.myapplication.data.Recipe
 import hr.ferit.patrikcupic.myapplication.R
+import hr.ferit.patrikcupic.myapplication.data.RecipeViewModel
 import androidx.compose.foundation.layout.Row as Row
 
 @Composable
 fun RecipesScreen(
+    viewModel: RecipeViewModel,
     navigation: NavController
 ) {
-    val recipes = recipes
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -51,8 +51,8 @@ fun RecipesScreen(
         )
         RecipeCategories()
         RecipeList(
-            recipes = recipes,
-            navigation = navigation
+            navigation = navigation,
+            viewModel = viewModel
         )
         IconButton(iconResource = R.drawable.ic_plus, text = "Add new recipe")
     }
@@ -61,7 +61,7 @@ fun RecipesScreen(
 
 @Composable
 fun RecipeList(
-    recipes: List<Recipe>,
+    viewModel: RecipeViewModel,
     navigation: NavController
 ) {
     Column {
@@ -74,10 +74,8 @@ fun RecipeList(
         ) {
             Text(
                 text = "7 recipes",
-                style = TextStyle(
-                    color = Color.DarkGray,
-                    fontSize = 14.sp
-                )
+                style = TextStyle(color = Color.DarkGray, fontSize =
+                14.sp)
             )
             Icon(
                 painter = painterResource(id = R.drawable.ic_flame),
@@ -93,19 +91,21 @@ fun RecipeList(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            items(recipes.size) { index ->
-                // Pass the correct parameters to RecipeCard
+            items(viewModel.recipesData.size) {
                 RecipeCard(
-                    id = index, // Pass the id here
-                    imageResource = recipes[index].image, // Pass the image
-                    title = recipes[index].title, // Pass the title
-                    navigation = navigation // Pass navigation
-                )
+                    imageResource = viewModel.recipesData[it].image,
+                    title = viewModel.recipesData[it].title
+                ) {
+                    navigation.navigate(
+                        Routes.getRecipeDetailsPath(it)
+                    )
+                }
                 Spacer(modifier = Modifier.width(8.dp))
             }
         }
     }
 }
+
 
 
 
@@ -292,50 +292,52 @@ fun IconButton(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeCard(
-    id: Int,
-    @DrawableRes imageResource: Int,
+    imageResource: String,
     title: String,
-    navigation: NavController
+    onClick: () -> Unit
 ) {
-    Card(
+    Box(
         modifier = Modifier
+            .padding(bottom = 16.dp)
             .height(326.dp)
             .width(215.dp)
-            .clip(RoundedCornerShape(12.dp)),
-        onClick = {
-            navigation.navigate(
-                route = Routes.getRecipeDetailsPath(id)
-            )
-        }
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize()
+        Card(
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(containerColor = LightGray),
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .clickable { onClick() }
         ) {
-            // Use painterResource for local images
-            Image(
-                painter = painterResource(id = imageResource), // Using painterResource for local images
-                contentDescription = title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 20.dp),
-                verticalArrangement = Arrangement.Bottom
-            ) {
-                Text(
-                    text = title,
-                    style = TextStyle(
-                        color = White,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+            Box {
+                Image(
+                    painter = rememberAsyncImagePainter(model = imageResource),
+                    contentDescription = title,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
                 )
-                Row {
-                    Chip(text = "30 min", backgroundColor = White, textColor = Pink)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Chip(text = "4 ingredients", backgroundColor = White, textColor = Pink)
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Bottom,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = title,
+                        letterSpacing = 0.32.sp,
+                        style = TextStyle(
+                            color = White,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Row {
+                        Chip("30 min")
+                        Spacer(Modifier.width(4.dp))
+                        Chip("4 ingredients")
+                    }
                 }
             }
         }

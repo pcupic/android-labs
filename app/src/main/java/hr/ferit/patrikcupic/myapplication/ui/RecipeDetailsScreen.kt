@@ -26,7 +26,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Icon
@@ -42,42 +41,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Magenta
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import hr.ferit.patrikcupic.labs.lab1.Recipe
-import hr.ferit.patrikcupic.labs.lab1.recipes
 import hr.ferit.patrikcupic.myapplication.R
 import coil.compose.rememberAsyncImagePainter
+import hr.ferit.patrikcupic.myapplication.data.Recipe
+import hr.ferit.patrikcupic.myapplication.data.RecipeViewModel
 
 @Composable
 fun RecipeDetailsScreen(
+    viewModel: RecipeViewModel,
     navigation: NavController,
-    recipeId: Int
+    recipe: Recipe
 ) {
-    val recipe = recipes[recipeId]
     val scrollState = rememberLazyListState()
-
     LazyColumn(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
         state = scrollState,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         item {
-            TopImageAndBar(
-                coverImage = recipe.image,
-                navigation = navigation,
-                recipe = recipes[recipeId]
-            )
-            ScreenInfo(recipe.title, recipe.category)
+            TopImageAndBar(recipe.image, viewModel, navigation, recipe, )
+            ScreenInfo (recipe.title, recipe.category)
             BasicInfo(recipe)
             Description(recipe)
             Servings()
@@ -86,18 +78,18 @@ fun RecipeDetailsScreen(
             ShoppingListButton()
             Reviews(recipe)
             OtherRecipes()
+
         }
     }
 }
 
 @Composable
 fun IngredientCard(
-    iconResource: Int,
+    iconResource: String,
     title: String,
     subtitle: String
 ) {
-    Column(
-    ) {
+    Column() {
         Spacer(modifier = Modifier.height(8.dp))
         Image(
             painter = rememberAsyncImagePainter(model = iconResource),
@@ -150,8 +142,9 @@ fun CircularButton(
 
 @Composable
 fun TopImageAndBar(
+    coverImage: String,
+    viewModel: RecipeViewModel,
     navigation: NavController,
-    @DrawableRes coverImage: Int,
     recipe: Recipe
 ) {
     Box(
@@ -160,7 +153,7 @@ fun TopImageAndBar(
             .fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = coverImage),
+            painter = rememberAsyncImagePainter(model = coverImage),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
@@ -180,14 +173,16 @@ fun TopImageAndBar(
             ) {
                 CircularButton(
                     iconResource = R.drawable.ic_arrow_back,
-                    color = Pink,
-                    onClick = { navigation.navigateUp() }
-                )
+                    color = Pink
+                ) {
+                    navigation.popBackStack(Routes.SCREEN_ALL_RECIPES, false)
+                }
                 CircularButton(
-                    R.drawable.ic_favorite,
-                    color = if(recipe.isFavorite) Magenta else DarkGray
+                    iconResource = R.drawable.ic_favorite,
+                    color = if (recipe.isFavorite) Pink else DarkGray
                 ) {
                     recipe.isFavorite = !recipe.isFavorite
+                    viewModel.updateRecipe(recipe)
                 }
             }
             Box(
@@ -206,6 +201,7 @@ fun TopImageAndBar(
         }
     }
 }
+
 
 @Composable
 fun ScreenInfo(

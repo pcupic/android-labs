@@ -1,21 +1,30 @@
-package hr.ferit.patrikcupic.labs.lab1
+package hr.ferit.patrikcupic.myapplication.data
 
 import androidx.annotation.DrawableRes
 import hr.ferit.patrikcupic.myapplication.R
+import hr.ferit.patrikcupic.myapplication.data.Ingredient
 
 data class Recipe(
-    @DrawableRes val image: Int,
-    val title: String,
-    val category: String,
-    val cookingTime: String,
-    val energy: String,
-    val rating: String,
-    val description: String,
-    val reviews: String,
-    val ingredients: List<Ingredient>,
+    var id: String = "",
+    val image: String = "",
+    val title: String = "",
+    val category: String = "",
+    val cookingTime: String = "",
+    val energy: String = "",
+    val rating: String = "",
+    val description: String = "",
+    val reviews: String = "",
+    val ingredients: List<Ingredient> = listOf(),
     var isFavorite: Boolean = false
 )
+data class Ingredient(
+    val image: String = "",
+    val title: String = "",
+    val subtitle: String = ""
+)
 
+
+/*
 val recipes: List<Recipe> = listOf(
     Recipe(
         image = R.drawable.strawberry_pie_1,
@@ -75,3 +84,4 @@ val recipes: List<Recipe> = listOf(
         )
     )
 )
+*/
